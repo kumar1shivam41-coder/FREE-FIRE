@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NxG ESPORTS | Tournament Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Teko:wght@300;500;700&family=Oswald:wght@500;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { 'nxg-orange': '#ff9100', 'nxg-dark': '#0a0a0a', 'nxg-gray': '#1f1f1f' },
+                    fontFamily: { 'gaming': ['Orbitron', 'sans-serif'], 'teko': ['Teko', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #0a0a0a; color: white; margin: 0; overflow-x: hidden; font-family: 'Rajdhani', sans-serif; }
+        .page-section { display: none; min-height: 100vh; }
+        .page-active { display: block; }
+        .bg-registration {
+            background-image: url('https://wallpapers.com/images/hd/bgmi-pochinki-4k-map-w747w796g6368221.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+        .bg-overlay { background: rgba(0, 0, 0, 0.85); width: 100%; min-height: 100vh; }
+        .glass-panel { background: rgba(20, 20, 20, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 145, 0, 0.3); }
+        .input-field { background: rgba(0, 0, 0, 0.6); border: 1px solid #333; transition: 0.3s; color: white; }
+        .input-field:focus { border-color: #ff9100; outline: none; }
+        .neon-text { text-shadow: 0 0 10px #ff9100; }
+        .modal-hidden { display: none; }
+        .modal-visible { display: flex; }
+        .admin-nav { background: #111; border-bottom: 2px solid #ff9100; position: sticky; top: 0; z-index: 100; }
+        .tab-btn { padding: 15px; font-family: 'Orbitron'; font-size: 12px; cursor: pointer; border-bottom: 3px solid transparent; color: #888; transition: 0.3s; }
+        .tab-btn.active { border-color: #ff9100; color: #ff9100; background: rgba(255,145,0,0.1); }
+        .poster-area { margin: 20px auto; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        .admin-tab-content { display: none; width: 100%; padding-bottom: 50px; }
+        .admin-tab-content.active { display: block; }
+        #bgmi-wrapper .poster-area { width: 600px; background-color: #0f0f0f; border: 4px solid #222; position: relative; color: white; }
+        #bgmi-wrapper .header-banner { background: linear-gradient(90deg, #700 0%, #d30000 50%, #700 100%); padding: 15px; text-align: center; border-bottom: 4px solid #ffcc00; }
+        #bgmi-wrapper .header-banner input { background: transparent; border: none; color: white; text-align: center; width: 100%; outline: none; text-transform: uppercase; font-weight: 700; font-family: 'Oswald', sans-serif; font-size: 24px; }
+        #bgmi-wrapper .content-container { display: flex; background: #fff; }
+        #bgmi-wrapper .character-bg { width: 45%; background: #ffcc00 url('https://wallpapers.com/images/hd/free-fire-alok-rare-diamond-character-2tc81dj68jo7t7r6.jpg') no-repeat center; background-size: cover; border-right: 2px solid #000; }
+        #bgmi-wrapper .table-side { width: 55%; background: white; }
+        #bgmi-wrapper .slot-header { background: #000; color: white; padding: 10px; font-size: 35px; text-align: right; font-weight: 700; font-family: 'Oswald'; }
+        #bgmi-wrapper .slot-header span { color: #ffcc00; }
+        #bgmi-wrapper table { width: 100%; border-collapse: collapse; }
+        #bgmi-wrapper .slot-num { background: #d30000; color: white; text-align: center; width: 40px; font-weight: bold; }
+        #bgmi-wrapper .team-name-input { width: 100%; border: none; padding: 5px; font-family: 'Oswald'; text-transform: uppercase; color: black; }
+        #ff-idp-wrapper .capture-box { width: 380px; background: #0f0f0f; border: 2px solid #ff003c; border-radius: 20px; overflow: hidden; }
+        #ff-idp-wrapper .header { background: #ff003c; padding: 15px; text-align: center; clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%); }
+        #ff-idp-wrapper .box { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px; margin: 8px 20px; text-align: center; }
+        #ff-idp-wrapper .label { color: #ff003c; font-weight: bold; font-size: 0.7rem; text-transform: uppercase; }
+        #ff-idp-wrapper .value { font-size: 1.5rem; font-family: 'Orbitron'; display: block; color: white; }
+        #ff-idp-wrapper .admin-panel { background: #111; padding: 20px; border-radius: 10px; border: 1px solid #333; width: 380px; margin-top: 20px; }
+        #nxg-standings-wrapper .poster-area { width: 600px; background: #000; border: 4px solid #333; color: white; }
+        #nxg-standings-wrapper table { width: 100%; background: #fff; color: #000; }
+        #nxg-standings-wrapper th { background: #222; color: #ffcc00; padding: 10px; font-family: 'Oswald'; }
+        #nxg-standings-wrapper td { border-bottom: 1px solid #ddd; text-align: center; padding: 8px; font-weight: bold; }
+        #nxg-standings-wrapper .team-input { width: 100%; border: none; color: #d30000; font-family: 'Oswald'; font-weight: bold; }
+        #nxg-standings-wrapper .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 600px; margin-top: 20px; }
+    </style>
+</head>
+
+<body>
+    <nav class="bg-black/90 border-b border-gray-800 p-4 flex justify-between items-center sticky top-0 z-[1000]">
+        <div class="font-teko text-2xl tracking-widest text-white">NxG <span class="text-nxg-orange">HUB</span></div>
+        <div>
+            <button id="adminAccessBtn" onclick="toggleModal('loginModal')" class="text-xs font-gaming text-gray-500 hover:text-nxg-orange transition">
+                <i class="fa-solid fa-lock mr-1"></i> ADMIN LOGIN
+            </button>
+            <button id="logoutBtn" onclick="logout()" class="hidden text-xs font-gaming text-red-500 hover:text-red-400 transition">
+                <i class="fa-solid fa-right-from-bracket mr-1"></i> LOGOUT
+            </button>
+        </div>
+    </nav>
+
+    <section id="regSection" class="page-section page-active bg-registration">
+        <div class="bg-overlay flex flex-col items-center py-10 px-4">
+            <div class="text-center mb-6">
+                <div class="inline-block border-4 border-nxg-orange p-2 rounded-full mb-2">
+                    <i class="fa-solid fa-gamepad text-5xl text-nxg-orange"></i>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-teko font-bold text-white tracking-wider neon-text">NxG <span class="text-nxg-orange">FREE FIRE ESPORTS</span></h1>
+                <p class="text-gray-400 font-gaming text-sm tracking-widest mt-2">OFFICIAL TOURNAMENT REGISTRATION</p>
+            </div>
+            <div class="w-full max-w-lg glass-panel rounded-xl p-6 md:p-8 relative">
+                <div class="absolute top-0 left-0 w-16 h-16 border-t-4 border-l-4 border-nxg-orange rounded-tl-lg"></div>
+                
+                <div class="mb-8 bg-black/60 p-4 rounded-lg border border-gray-700 text-center">
+                    <h3 class="text-nxg-orange font-gaming text-lg mb-3">ENTRY FEE: ₹30</h3>
+                    <div class="bg-white p-2 inline-block rounded-lg mb-4">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=kumar1shivam41-1@okaxis&pn=NxG%20Esports&am=30" class="w-32 h-32">
+                    </div>
+                    <div class="grid grid-cols-1 gap-2 mb-4">
+                        <a onclick="markPaid()" href="upi://pay?pa=kumar1shivam41-1@okaxis&pn=NxG%20Esports&am=30&cu=INR" class="flex items-center justify-center bg-[#6739b7] hover:bg-[#522d92] text-white py-2 rounded-md transition-all">
+                            <img src="https://www.vectorlogo.zone/logos/phonepe/phonepe-icon.svg" class="w-5 h-5 mr-2 bg-white rounded-full">
+                            <span class="font-bold text-sm">PhonePe / All UPI</span>
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-4">
+                        <a onclick="markPaid()" href="upi://pay?pa=kumar1shivam41-1@okaxis&pn=NxG%20Esports&am=30&cu=INR" class="flex items-center justify-center bg-white hover:bg-gray-200 text-blue-600 py-2 rounded-md transition-all border border-gray-300">
+                            <img src="https://www.vectorlogo.zone/logos/google_pay/google_pay-icon.svg" class="w-5 h-5 mr-2">
+                            <span class="font-bold text-sm">G-Pay</span>
+                        </a>
+                        <a onclick="markPaid()" href="upi://pay?pa=kumar1shivam41-1@okaxis&pn=NxG%20Esports&am=30&cu=INR" class="flex items-center justify-center bg-[#00baf2] hover:bg-[#0099cc] text-white py-2 rounded-md transition-all">
+                            <img src="https://www.vectorlogo.zone/logos/paytm/paytm-icon.svg" class="w-8 h-8 mr-1">
+                            <span class="font-bold text-sm">Paytm</span>
+                        </a>
+                    </div>
+                    <div id="paymentBadge" class="hidden mb-4 p-2 bg-green-500/20 border border-green-500 rounded flex items-center justify-center animate-pulse">
+                        <i class="fa-solid fa-circle-check text-green-500 mr-2"></i>
+                        <span class="text-xs font-gaming text-green-400 uppercase tracking-widest">Payment Initiated</span>
+                    </div>
+                    <div class="text-sm font-teko font-bold text-white tracking-wide">
+                        UPI ID: <span class="text-nxg-orange">kumar1shivam41-1@okaxis</span>
+                    </div>
+                </div>
+
+                <form id="regForm" onsubmit="handleRegistration(event)">
+                    <input type="text" id="teamName" required placeholder="TEAM NAME" class="input-field w-full px-4 py-3 rounded mb-4">
+                    <input type="number" id="gameUid" required placeholder="GAME UID" class="input-field w-full px-4 py-3 rounded mb-4">
+                    <input type="tel" id="phone" required placeholder="WHATSAPP NUMBER" class="input-field w-full px-4 py-3 rounded mb-4">
+                    <div class="mb-6" id="slotContainer"></div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-orange-600 to-red-600 font-gaming font-bold py-4 rounded hover:from-orange-500 hover:to-red-500 transition-all shadow-lg shadow-orange-900/20">
+                        SEND TO WHATSAPP
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section id="adminSection" class="page-section bg-zinc-950">
+        <div class="admin-nav flex justify-center">
+            <div class="tab-btn active" onclick="switchTab('slotlist-tab', this)">SLOT LIST</div>
+            <div class="tab-btn" onclick="switchTab('idp-tab', this)">IDP SHARE</div>
+            <div class="tab-btn" onclick="switchTab('standings-tab', this)">STANDINGS</div>
+        </div>
+
+        <div id="slotlist-tab" class="admin-tab-content active">
+            <div id="bgmi-wrapper" class="flex flex-col items-center pt-10">
+                <div id="slot-poster-nxg" class="poster-area">
+                    <img id="logo-preview-nxg" src="#" style="position: absolute; top: 10px; left: 10px; width: 60px; height: 60px; z-index: 10; display: none;">
+                    <div class="header-banner">
+                        <input type="text" value="BATTLEGROUNDS MOBILE INDIA TOURNAMENT">
+                        <input type="text" style="font-size: 14px; color: #ffcc00;" value="DATE: 25-12-2025 | TIME: 08:00 PM | MAP: ERANGEL">
+                    </div>
+                    <div class="slot-header">SLOT <span>LIST</span></div>
+                    <div class="content-container">
+                        <div class="character-bg"></div>
+                        <div class="table-side">
+                            <table>
+                                <thead>
+                                    <tr style="background: #d30000; color: white; font-family: Oswald;">
+                                        <th style="padding: 5px;">SLOT</th>
+                                        <th>TEAM NAME</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="slot-list-body-nxg"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="footer-bar bg-black p-2 flex justify-between text-[10px] border-t-2 border-yellow-500">
+                        <span class="text-yellow-500">NXG ESPORTS OFFICIAL</span>
+                        <span>CONTACT: 9625899506</span>
+                    </div>
+                </div>
+                <div class="flex gap-4 mt-6">
+                    <input type="file" id="file-input-nxg" accept="image/*" class="hidden">
+                    <button class="bg-gray-700 px-4 py-2 rounded font-bold" onclick="document.getElementById('file-input-nxg').click()">📁 Logo</button>
+                    <button class="bg-yellow-500 text-black px-4 py-2 rounded font-bold" onclick="downloadPosterNXG()">📸 Save PNG</button>
+                    <button class="bg-red-600 px-4 py-2 rounded font-bold" onclick="resetListNXG()">🔄 Reset</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="idp-tab" class="admin-tab-content">
+            <div id="ff-idp-wrapper" class="flex flex-col items-center pt-10">
+                <div id="capture-area-ff" class="capture-box">
+                    <div class="header">
+                        <h1 class="font-bold text-white text-xl">NxG FREE FIRE OFFICIAL
+                        <div style="font-size: 10px; color: white;">OFFICIAL CUSTOM ROOM</div>
+                    </div>
+                    <div class="box"><span class="label">IDP Time</span><span class="value" id="matchTime-ff" style="color: #ffd700;">11:00 AM</span></div>
+                    <div class="box"><span class="label">Start Time</span><span class="value" id="startTime-ff" style="color: #00ffcc;">11:05 AM</span></div>
+                    <div class="box"><span class="label">Room ID</span><span class="value" id="roomID-ff">0000000</span></div>
+                    <div class="box"><span class="label">Password</span><span class="value" id="roomPass-ff">1234</span></div>
+                    <div class="p-4 text-center text-xs text-gray-400">🗺️ Map: BERMUDA-KALAHARI-PURGATORY  <br>☢️ 1 kill- 1 points <br> ☢️ winner- 10 point</div>    
+                </div>
+                <div class="admin-panel">
+                    <h3 class="text-red-500 font-bold mb-3 border-b border-red-900 pb-1">MATCH CONFIGURATION</h3>
+                    <select id="timeSelector-ff" onchange="updateIDPTimes()" class="w-full bg-black border border-red-500 p-2 mb-3 rounded text-white text-sm">
+                        <option value="11:00 AM">11:00 AM</option>
+                        <option value="11:30 AM">11:30 AM</option>
+                        <option value="12:00 PM">12:00 PM</option>
+                        <option value="02:00 PM">02:00 PM</option>
+                        <option value="02:30 PM">02:30 PM</option>
+                        <option value="03:00 PM">03:00 PM</option>
+                        <option value="05:00 PM">05:00 PM</option>
+                        <option value="05:30 PM">05:30 PM</option>
+                        <option value="06:00 PM">06:00 PM</option>
+                        <option value="08:00 PM">08:00 PM</option>
+                        <option value="08:30 PM">08:30 PM</option>
+                        <option value="09:00 PM">09:00 PM</option>
+                    </select>
+                    <input type="text" id="idInput-ff" placeholder="Room ID" class="w-full bg-black border border-red-500 p-2 mb-2 rounded text-white">
+                    <input type="text" id="passInput-ff" placeholder="Password" class="w-full bg-black border border-red-500 p-2 mb-3 rounded text-white">
+                    <button class="w-full bg-red-600 py-2 rounded font-bold mb-2" onclick="updateFFInfo()">UPDATE IMAGE</button>
+                    <button class="w-full bg-yellow-500 text-black py-2 rounded font-bold" onclick="downloadFFImage()">📸 DOWNLOAD PNG</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="standings-tab" class="admin-tab-content">
+            <div id="nxg-standings-wrapper" class="flex flex-col items-center pt-10">
+                <div id="standings-poster-nxg" class="poster-area">
+                    <div class="bg-red-700 p-4 text-center border-b-4 border-yellow-500">
+                        <h1 class="text-3xl font-bold font-oswald uppercase">Overall Standings</h1>
+                        <p class="text-yellow-400 text-xs font-bold">NXG ESPORTS OFFICIAL</p>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>#</th><th style="text-align:left">TEAM NAME</th><th>RANK</th><th>KILLS</th><th>TOTAL</th></tr>
+                        </thead>
+                        <tbody id="standings-body-nxg"></tbody>
+                    </table>
+                </div>
+                <div class="controls">
+                    <button class="bg-green-600 p-3 rounded font-bold" onclick="addStandingsTeam()">➕ Add Team</button>
+                    <button class="bg-red-600 p-3 rounded font-bold" onclick="resetStandingsTable()">🔄 Reset</button>
+                    <button class="bg-yellow-500 text-black p-3 rounded font-bold col-span-2" onclick="downloadStandingsImage()">📸 Save Standings Image</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="loginModal" class="modal-hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/95 p-4">
+        <div class="glass-panel p-8 rounded-xl w-full max-sm border-nxg-orange">
+            <h2 class="font-teko text-3xl text-nxg-orange mb-4 text-center">ADMIN LOGIN</h2>
+            <input type="password" id="adminPass" placeholder="Password" class="input-field w-full p-3 rounded mb-4">
+            <button onclick="checkLogin()" class="w-full bg-nxg-orange text-black font-bold py-3 rounded">LOGIN</button>
+            <button onclick="toggleModal('loginModal')" class="w-full text-gray-500 mt-4 text-xs">CANCEL</button>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PHONE = "919625899506";
+        const CORRECT_PASSWORD = "admin2007";
+        let formDataTemp = {};
+
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('modal-hidden');
+            modal.classList.toggle('modal-visible');
+        }
+
+        function checkLogin() {
+            if(document.getElementById('adminPass').value === CORRECT_PASSWORD) {
+                document.getElementById('regSection').classList.remove('page-active');
+                document.getElementById('adminSection').classList.add('page-active');
+                document.getElementById('adminAccessBtn').classList.add('hidden');
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                toggleModal('loginModal');
+            } else { alert("Access Denied!"); }
+        }
+
+        function logout() {
+            document.getElementById('adminSection').classList.remove('page-active');
+            document.getElementById('regSection').classList.add('page-active');
+            document.getElementById('adminAccessBtn').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.admin-tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function markPaid() {
+            document.getElementById('paymentBadge').classList.remove('hidden');
+        }
+
+        function handleRegistration(e) {
+            e.preventDefault();
+            formDataTemp = {
+                teamName: document.getElementById('teamName').value,
+                gameUid: document.getElementById('gameUid').value,
+                phone: document.getElementById('phone').value,
+                slot: document.querySelector('input[name="slot"]:checked').value
+            };
+            proceedToWhatsapp();
+        }
+
+        function proceedToWhatsapp() {
+            const message = `*NxG ESPORTS REGISTRATION*%0A` +
+                            `-------------------------------------%0A` +
+                            `*Team:* ${formDataTemp.teamName}%0A` +
+                            `*UID:* ${formDataTemp.gameUid}%0A` +
+                            `*Phone:* ${formDataTemp.phone}%0A` +
+                            `*Slot:* ${formDataTemp.slot}%0A` +
+                            `-------------------------------------%0A` +
+                            `*Status:* Sending Payment Screenshot Now!`;
+            window.open(`https://wa.me/${ADMIN_PHONE}?text=${message}`, '_blank');
+        }
+
+        // SLOT LIST LOGIC
+        function generateSlotsNXG() {
+            const body = document.getElementById('slot-list-body-nxg');
+            body.innerHTML = '';
+            for (let i = 1; i <= 25; i++) {
+                const n = i < 10 ? '0' + i : i;
+                body.innerHTML += `<tr><td class="slot-num">${n}</td><td><input type="text" class="team-name-input" placeholder="--- TEAM NAME ---"></td></tr>`;
+            }
+        }
+
+        function resetListNXG() {
+            generateSlotsNXG();
+            const logoPreview = document.getElementById('logo-preview-nxg');
+            logoPreview.src = "#";
+            logoPreview.style.display = "none";
+            document.getElementById('file-input-nxg').value = "";
+            alert("List and Logo Reset!");
+        }
+
+        document.getElementById('file-input-nxg').addEventListener('change', function(e) {
+            const preview = document.getElementById('logo-preview-nxg');
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                preview.src = reader.result;
+                preview.style.display = "block";
+            }
+            if (file) { reader.readAsDataURL(file); } 
+            else { preview.src = "#"; preview.style.display = "none"; }
+        });
+
+        function downloadPosterNXG() {
+            html2canvas(document.getElementById('slot-poster-nxg'), { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Slotlist.png'; link.href = canvas.toDataURL(); link.click();
+            });
+        }
+
+        // IDP LOGIC
+        function updateIDPTimes() {
+            const selectedIDP = document.getElementById('timeSelector-ff').value;
+            document.getElementById('matchTime-ff').innerText = selectedIDP;
+            let [time, modifier] = selectedIDP.split(' ');
+            let [hours, minutes] = time.split(':');
+            let newMinutes = parseInt(minutes) + 5;
+            let newHours = parseInt(hours);
+            if(newMinutes >= 60) { newMinutes = "05"; newHours = newHours + 1; } 
+            else { newMinutes = newMinutes < 10 ? "0" + newMinutes : newMinutes; }
+            document.getElementById('startTime-ff').innerText = `${newHours}:${newMinutes} ${modifier}`;
+        }
+
+        function updateFFInfo() {
+            const id = document.getElementById('idInput-ff').value;
+            const pass = document.getElementById('passInput-ff').value;
+            if(id) document.getElementById('roomID-ff').innerText = id;
+            if(pass) document.getElementById('roomPass-ff').innerText = pass;
+            alert("Updated!");
+        }
+
+        function downloadFFImage() {
+            html2canvas(document.getElementById("capture-area-ff"), { scale: 2, backgroundColor: "#050505" }).then(canvas => {
+                const link = document.createElement("a");
+                link.download = "IDP_Share.png"; link.href = canvas.toDataURL(); link.click();
+            });
+        }
+
+        // STANDINGS LOGIC
+        const ptsSystem = { 1:10, 2:6, 3:5, 4:4, 5:3, 6:2, 7:1, 8:1 };
+        
+        function createSRow(n) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${n}</td><td><input type="text" class="team-input" placeholder="TEAM"></td><td><input type="number" class="m-rank w-10 text-center" oninput="sortStandings()"></td><td><input type="number" class="f-pts w-10 text-center" oninput="sortStandings()"></td><td class="total-cell">0</td>`;
+            document.getElementById('standings-body-nxg').appendChild(tr);
+        }
+
+        function addStandingsTeam() {
+            const currentRows = document.querySelectorAll('#standings-body-nxg tr').length;
+            createSRow(currentRows + 1);
+        }
+
+        function sortStandings() {
+            const rows = document.querySelectorAll('#standings-body-nxg tr');
+            rows.forEach(r => {
+                const rank = parseInt(r.querySelector('.m-rank').value) || 0;
+                const kills = parseInt(r.querySelector('.f-pts').value) || 0;
+                r.querySelector('.total-cell').innerText = (ptsSystem[rank] || 0) + kills;
+            });
+        }
+
+        function resetStandingsTable() {
+            document.getElementById('standings-body-nxg').innerHTML = '';
+            for (let i = 1; i <= 12; i++) createSRow(i);
+        }
+
+        function downloadStandingsImage() {
+            html2canvas(document.getElementById('standings-poster-nxg'), { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Standings.png'; link.href = canvas.toDataURL(); link.click();
+            });
+        }
+
+        window.onload = () => {
+            generateSlotsNXG();
+            resetStandingsTable();
+            const slots = ['11:00 AM', '02:00 PM', '05:00 PM', '08:00 PM'];
+            document.getElementById('slotContainer').innerHTML = slots.map(s => `
+                <label class="flex items-center p-3 border border-gray-700 rounded mb-2 cursor-pointer bg-black/40 hover:bg-nxg-orange/10 transition">
+                    <input type="radio" name="slot" value="${s}" class="mr-3" required>
+                    <span class="text-gray-200 text-sm font-gaming tracking-tighter">${s}</span>
+                </label>`).join('');
+        }
+    </script>
+</body>
+
+</html>
+    
+  </body>
+  
+</html>
